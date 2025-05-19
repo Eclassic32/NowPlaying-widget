@@ -31,14 +31,15 @@ body {
     max-width: 600px;
     padding: 20px;
     transition: all 0.3s ease-in-out;
+    
+    /* Hide widget when no media is playing */
+    &.media-widget.no-media {
+        opacity: 0.5;
+        transform: scale(0.95);
+        filter: grayscale(1);
+    }
 }
 
-/* Hide widget when no media is playing */
-.media-widget.no-media {
-    opacity: 0.5;
-    transform: scale(0.95);
-    filter: grayscale(1);
-}
 
 .widget-header {
     display: flex;
@@ -47,12 +48,12 @@ body {
     margin-bottom: 20px;
     border-bottom: 1px solid #eee;
     padding-bottom: 10px;
-}
 
-.widget-header h1 {
+    h1 {
     font-size: 24px;
     margin: 0;
     color: #444;
+    }
 }
 
 .app-info {
@@ -167,12 +168,6 @@ body {
     transition: opacity 0.3s ease;
 }
 
-/* Spotify-specific album art styling */
-[data-app-name*="Spotify"] .album-art {
-    /* No additional styling needed - we crop the image at the server */
-    border: 2px solid #1db954;
-}
-
 .no-art {
     font-size: 48px;
     color: #999;
@@ -206,167 +201,158 @@ body {
 }
 
 /* Playback status-specific styles */
-.media-widget.playing .progress-bar {
-    background-color: #4caf50;
-}
-
-.media-widget.paused .progress-bar {
-    background-color: #ff9800;
-}
-
-.media-widget.stopped .progress-bar {
-    background-color: #f44336;
+.media-widget{
+    &.playing .progress-bar {
+        background-color: #4caf50;
+    }
+    &.paused .progress-bar {
+        background-color: #ff9800;
+    }
+    &.stopped .progress-bar {
+        background-color: #f44336;
+    }
 }
 
 /* App-specific styling examples */
 /* Spotify-like styling */
+
+[data-app="spotify.exe"],
 [data-app-name*="Spotify"] {
     background-color: #1db954;
     color: white;
-}
 
-[data-app-name*="Spotify"] .media-title,
-[data-app-name*="Spotify"] .widget-header h1 {
-    color: white;
-}
+    .app-name-display::before { content: "Spotify"; }
 
-[data-app-name*="Spotify"] .media-artist,
-[data-app-name*="Spotify"] .media-album,
-[data-app-name*="Spotify"] #status,
-[data-app-name*="Spotify"] .time-display {
-    color: rgba(255, 255, 255, 0.8);
-}
+    .media-title, .widget-header h1 {
+        color: white;
+    }
+    
+    .media-artist, .media-album, #status, .time-display {
+       color: rgba(255, 255, 255, 0.8);
+    }
 
-[data-app-name*="Spotify"] .progress-container {
-    background-color: rgba(255, 255, 255, 0.3);
-}
+    .progress-container {
+        background-color: rgba(255, 255, 255, 0.3);
+    }
+    
+    #progress-bar {
+        background-color: white;
+    }
 
-[data-app-name*="Spotify"] .progress-bar {
-    background-color: white;
+    .album-art {
+        border: 2px solid #1db954;
+    }
+
+    .notification {
+        background-color: #1db954;
+        color: white;
+
+        .notification-title {
+            color: white;
+        }
+    
+        .notification-artist, .notification-status {
+            color: rgba(255, 255, 255, 0.8);
+        }
+    }
 }
 
 /* Browser-based apps styling */
+.app-name-display[data-app="chrome.exe"]::before { content: "Chrome"; }
+.app-name-display[data-app="firefox.exe"]::before { content: "Firefox"; }
+.app-name-display[data-app="msedge.exe"]::before { content: "Edge"; }
+.app-name-display[data-app*="Edge"]::before { content: "Edge"; }
+.app-name-display[data-app*="Internet.Explorer"]::before { content: "Internet Explorer"; }
+
 [data-app-name*="chrome.exe"], 
 [data-app-name*="edge.exe"],
 [data-app-name*="firefox.exe"],
 [data-app-name*="Browser"] {
     background: linear-gradient(135deg, #4285f4, #34a853, #fbbc05, #ea4335);
     color: white;
+
+    .media-title, .widget-header h1 {
+        color: white;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    }
+
+    .media-artist, .media-album, #status, .time-display {
+       color: rgba(255, 255, 255, 0.9);
+    }
+
+    .progress-container {
+        background-color: rgba(255, 255, 255, 0.3);
+    }
+    
+    .progress-bar {
+        background-color: white;
+    }
 }
 
-[data-app-name*="chrome.exe"] .media-title,
-[data-app-name*="edge.exe"] .media-title,
-[data-app-name*="firefox.exe"] .media-title,
-[data-app-name*="Browser"] .media-title,
-[data-app-name*="chrome.exe"] .widget-header h1,
-[data-app-name*="edge.exe"] .widget-header h1,
-[data-app-name*="firefox.exe"] .widget-header h1,
-[data-app-name*="Browser"] .widget-header h1 {
-    color: white;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
-}
 
-[data-app-name*="chrome.exe"] .media-artist,
-[data-app-name*="edge.exe"] .media-artist,
-[data-app-name*="firefox.exe"] .media-artist,
-[data-app-name*="Browser"] .media-artist,
-[data-app-name*="chrome.exe"] .media-album,
-[data-app-name*="edge.exe"] .media-album,
-[data-app-name*="firefox.exe"] .media-album,
-[data-app-name*="Browser"] .media-album,
-[data-app-name*="chrome.exe"] #status,
-[data-app-name*="edge.exe"] #status,
-[data-app-name*="firefox.exe"] #status,
-[data-app-name*="Browser"] #status,
-[data-app-name*="chrome.exe"] .time-display,
-[data-app-name*="edge.exe"] .time-display,
-[data-app-name*="firefox.exe"] .time-display,
-[data-app-name*="Browser"] .time-display {
-    color: rgba(255, 255, 255, 0.9);
-}
 
-[data-app-name*="chrome.exe"] .progress-container,
-[data-app-name*="edge.exe"] .progress-container,
-[data-app-name*="firefox.exe"] .progress-container,
-[data-app-name*="Browser"] .progress-container {
-    background-color: rgba(255, 255, 255, 0.3);
-}
-
-[data-app-name*="chrome.exe"] .progress-bar,
-[data-app-name*="edge.exe"] .progress-bar,
-[data-app-name*="firefox.exe"] .progress-bar,
-[data-app-name*="Browser"] .progress-bar {
-    background-color: white;
-}
-
-/* YouTube-like styling */
-[data-app-name*="chrome.exe"], 
-[data-app-name*="edge.exe"], 
+/* YouTube styling */
 [data-app-name*="YouTube"] {
     background-color: #ff0000;
     color: white;
+
+    .app-name-display[data-app*="YouTube"]::before { content: "YouTube"; }
+
+    .media-title, .widget-header h1 {
+        color: white;
+    }
+    .media-artist, .media-album, #status, .time-display {
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    .progress-container {
+        background-color: rgba(255, 255, 255, 0.3);
+    }
+    
+    .progress-bar {
+        background-color: white;
+    }
+
+    .media-thumbnail {
+        border: 2px solid #ff0000;
+        box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+    }
+
+    .media-thumbnail.loading::after {
+        background-color: rgba(0, 0, 0, 0.3);
+    }
 }
 
-[data-app-name*="chrome.exe"] .media-title,
-[data-app-name*="edge.exe"] .media-title,
-[data-app-name*="YouTube"] .media-title,
-[data-app-name*="chrome.exe"] .widget-header h1,
-[data-app-name*="edge.exe"] .widget-header h1,
-[data-app-name*="YouTube"] .widget-header h1 {
-    color: white;
-}
-
-[data-app-name*="chrome.exe"] .media-artist,
-[data-app-name*="edge.exe"] .media-artist,
-[data-app-name*="YouTube"] .media-artist,
-[data-app-name*="chrome.exe"] .media-album,
-[data-app-name*="edge.exe"] .media-album,
-[data-app-name*="YouTube"] .media-album,
-[data-app-name*="chrome.exe"] #status,
-[data-app-name*="edge.exe"] #status,
-[data-app-name*="YouTube"] #status,
-[data-app-name*="chrome.exe"] .time-display,
-[data-app-name*="edge.exe"] .time-display,
-[data-app-name*="YouTube"] .time-display {
-    color: rgba(255, 255, 255, 0.8);
-}
-
-[data-app-name*="chrome.exe"] .progress-container,
-[data-app-name*="edge.exe"] .progress-container,
-[data-app-name*="YouTube"] .progress-container {
-    background-color: rgba(255, 255, 255, 0.3);
-}
-
-[data-app-name*="chrome.exe"] .progress-bar,
-[data-app-name*="edge.exe"] .progress-bar,
-[data-app-name*="YouTube"] .progress-bar {
-    background-color: white;
-}
-
-/* Windows Media Player-like styling */
+/* Windows Media Player styling */
 [data-app-name*="Windows.Media"] {
     background: linear-gradient(135deg, #0078d7, #002050);
     color: white;
-}
 
-[data-app-name*="Windows.Media"] .media-title,
-[data-app-name*="Windows.Media"] .widget-header h1 {
-    color: white;
-}
+    .media-title, .widget-header h1 {
+        color: white;
+    }
+    .media-artist, .media-album, #status, .time-display {
+        color: rgba(255, 255, 255, 0.8);
+    }
+    .progress-container {
+        background-color: rgba(255, 255, 255, 0.3);
+    }
+    .progress-bar {
+        background-color: white;
+    }
 
-[data-app-name*="Windows.Media"] .media-artist,
-[data-app-name*="Windows.Media"] .media-album,
-[data-app-name*="Windows.Media"] #status,
-[data-app-name*="Windows.Media"] .time-display {
-    color: rgba(255, 255, 255, 0.8);
-}
-
-[data-app-name*="Windows.Media"] .progress-container {
-    background-color: rgba(255, 255, 255, 0.3);
-}
-
-[data-app-name*="Windows.Media"] .progress-bar {
-    background-color: white;
+    .notification {
+        background: linear-gradient(135deg, #0078d7, #002050);
+        color: white;
+        
+        .notification-title {
+            color: white;
+        }
+        
+        .notification-artist, .notification-status {
+            color: rgba(255, 255, 255, 0.8);
+        }
+    }
 }
 
 /* Now Playing Notification Styles */
@@ -424,19 +410,6 @@ body {
 }
 
 /* App-specific notification styling */
-[data-app-name*="Spotify"].notification {
-    background-color: #1db954;
-    color: white;
-}
-
-[data-app-name*="Spotify"].notification .notification-title {
-    color: white;
-}
-
-[data-app-name*="Spotify"].notification .notification-artist,
-[data-app-name*="Spotify"].notification .notification-status {
-    color: rgba(255, 255, 255, 0.8);
-}
 
 [data-app-name*="chrome.exe"].notification,
 [data-app-name*="edge.exe"].notification,
@@ -460,79 +433,64 @@ body {
     color: rgba(255, 255, 255, 0.8);
 }
 
-[data-app-name*="Windows.Media"].notification {
-    background: linear-gradient(135deg, #0078d7, #002050);
-    color: white;
-}
 
-[data-app-name*="Windows.Media"].notification .notification-title {
-    color: white;
-}
 
-[data-app-name*="Windows.Media"].notification .notification-artist,
-[data-app-name*="Windows.Media"].notification .notification-status {
-    color: rgba(255, 255, 255, 0.8);
-}
-
-/* VLC-like styling */
 [data-app-name*="vlc.exe"] {
-    background-color: #ff5722; /* Vibrant Orange color, similar to VLC's branding */
+    background-color: #ff5722; 
     color: white;
+
+    .app-name-display::before { content: "VLC Media Player"; }
+
+    .media-title, .widget-header h1 {
+        color: white;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    }
+    
+    .media-artist, .media-album, #status, .time-display {
+        color: rgba(255, 255, 255, 0.9);
+    }
+    
+    .progress-container {
+        background-color: rgba(255, 255, 255, 0.3);
+    }
+    
+    .progress-bar {
+        background-color: #ffccbc; 
+    }
+    
+    /* Additional styling for VLC (optional) */
+    .widget-header {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .media-thumbnail {
+        border: 2px solid #ffccbc;
+    }
+    
+    .media-thumbnail.loading::after {
+        background-color: rgba(0, 0, 0, 0.3);
+    }
+    
+    .media-content {
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+        padding-top: 15px;
+    }
+    
+    /* Notification styling */
+    .notification {
+        background-color: #ff5722;
+        color: white;
+
+        .notification-title {
+            color: white;
+        }
+        
+        .notification-artist, .notification-status {
+            color: rgba(255, 255, 255, 0.8);
+        }
+    }
 }
 
-[data-app-name*="vlc.exe"] .media-title,
-[data-app-name*="vlc.exe"] .widget-header h1 {
-    color: white;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-}
-
-[data-app-name*="vlc.exe"] .media-artist,
-[data-app-name*="vlc.exe"] .media-album,
-[data-app-name*="vlc.exe"] #status,
-[data-app-name*="vlc.exe"] .time-display {
-    color: rgba(255, 255, 255, 0.9);
-}
-
-[data-app-name*="vlc.exe"] .progress-container {
-    background-color: rgba(255, 255, 255, 0.3);
-}
-
-[data-app-name*="vlc.exe"] .progress-bar {
-    background-color: #ffccbc; /* Lighter shade of orange for the progress bar */
-}
-
-/* Additional styling for VLC (optional) */
-[data-app-name*="vlc.exe"] .widget-header {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-[data-app-name*="vlc.exe"] .media-thumbnail {
-    border: 2px solid #ffccbc;
-}
-
-[data-app-name*="vlc.exe"] .media-thumbnail.loading::after {
-    background-color: rgba(0, 0, 0, 0.3);
-}
-
-[data-app-name*="vlc.exe"] .media-content {
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
-    padding-top: 15px;
-}
-
-/* VLC-specific notification styling */
-[data-app-name*="vlc.exe"].notification {
-    background-color: #ff5722;
-    color: white;
-}
-
-[data-app-name*="vlc.exe"].notification .notification-title {
-    color: white;
-}
-
-[data-app-name*="vlc.exe"].notification .notification-artist,
-[data-app-name*="vlc.exe"].notification .notification-status {
-    color: rgba(255, 255, 255, 0.8);
-}
 
 /* App Name Display Settings
    This section determines how app names are displayed in the UI.
@@ -547,52 +505,40 @@ body {
 */
 
 /* App Name Display Settings - Customizable by users */
-.app-name-display[data-app="chrome.exe"]::before { content: "Chrome"; }
-.app-name-display[data-app="firefox.exe"]::before { content: "Firefox"; }
-.app-name-display[data-app="msedge.exe"]::before { content: "Edge"; }
-.app-name-display[data-app*="Edge"]::before { content: "Edge"; }
-.app-name-display[data-app*="Internet.Explorer"]::before { content: "Internet Explorer"; }
 .app-name-display[data-app*="ApplicationFrameHost"]::before { content: "Microsoft Store App"; }
-.app-name-display[data-app*="Spotify"]::before { content: "Spotify"; }
-.app-name-display[data-app="spotify.exe"]::before { content: "Spotify"; }
-.app-name-display[data-app="vlc.exe"]::before { content: "VLC Media Player"; }
 .app-name-display[data-app*="Netflix"]::before { content: "Netflix"; }
-.app-name-display[data-app*="YouTube"]::before { content: "YouTube"; }
 .app-name-display[data-app*="Movies"]::before { content: "Movies & TV"; }
 .app-name-display[data-app*="Groove"]::before { content: "Groove Music"; }
 
 /* Example template for any .exe app */
-.app-name-display[data-app*="example.exe"]::before { 
-    content: "Example Player"; 
-}
+
 
 [data-app-name*="example.exe"] {
     background: linear-gradient(135deg, #8844ee, #4455dd);
     color: white;
+
+    &.app-name-display::before { content: "Example Player"; }
+
+    .media-title, .widget-header h1 {
+        color: white;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    }
+    
+    .media-artist, .media-album, #status, .time-display {
+        color: rgba(255, 255, 255, 0.9);
+    }
+    
+    .progress-container {
+        background-color: rgba(255, 255, 255, 0.3);
+    }
+    
+    .progress-bar {
+        background-color: #ffcc00;
+    }
+    
+    .media-thumbnail {
+        border: 2px solid #ffcc00;
+        box-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
+    }
 }
 
-[data-app-name*="example.exe"] .media-title,
-[data-app-name*="example.exe"] .widget-header h1 {
-    color: white;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
-}
-
-[data-app-name*="example.exe"] .media-artist,
-[data-app-name*="example.exe"] .media-album,
-[data-app-name*="example.exe"] #status,
-[data-app-name*="example.exe"] .time-display {
-    color: rgba(255, 255, 255, 0.9);
-}
-
-[data-app-name*="example.exe"] .progress-container {
-    background-color: rgba(255, 255, 255, 0.3);
-}
-
-[data-app-name*="example.exe"] .progress-bar {
-    background-color: #ffcc00;
-}
-
-[data-app-name*="example.exe"] .media-thumbnail {
-    border: 2px solid #ffcc00;
-    box-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
-}
