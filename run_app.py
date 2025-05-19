@@ -31,5 +31,8 @@ print("Access the application at: http://localhost:5000")
 print("Press Ctrl+C to stop the server")
 
 # Change to the workspace directory to ensure paths are correct
+# Get the directory where this script is located
+script_dir = os.path.dirname(os.path.abspath(__file__))
+os.chdir(script_dir)
 os.chdir("./workspace")
 subprocess.run([python_command, "code/app.py"])
