@@ -4,7 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Now Playing Notification</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <!-- Style with regular CSS -->
+    <!-- <link rel="stylesheet" href="/static/style.css"> --> 
+
+    <!-- Use SASS for dynamic styling -->
+    <style id="compiled-css"></style>
+    <script src="/static/sass.js"></script>
+    <script>
+        // Function to fetch the Sass file
+        function fetchSassFile(url) {
+            return fetch(url)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.text();
+                });
+        }
+
+        // Compile Sass
+        fetchSassFile('static/style.scss')
+            .then(sassCode => {
+                const sass = new Sass();
+                sass.compile(sassCode, function(result) {
+                    if (result.status === 0) {
+                        // If compilation is successful, inject the CSS into the <style> tag
+                        document.getElementById('compiled-css').innerHTML = result.text;
+                    } else {
+                        console.error(result.formatted);
+                    }
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching Sass file:', error);
+            });
+    </script>
+    
+    <!-- Widget Script -->
     <script>
         // Polling interval in milliseconds
         const POLLING_INTERVAL = 1000;
@@ -86,12 +122,12 @@
     <div class="notification-container">
         <div id="notification" class="notification" data-app-name="Unknown">
             <div class="notification-header">
-                <span id="notification-app" class="notification-app app-name-display" data-app="">Unknown App</span>
+                <span id="notification-app" class="notification-app app-name-display" data-app=""></span>
                 <span id="notification-status" class="notification-status">UNKNOWN</span>
             </div>
             <div class="notification-content">
                 <h2 id="notification-title" class="notification-title">Not Playing</h2>
-                <p id="notification-artist" class="notification-artist">Unknown Artist</p>
+                <p id="notification-artist" class="notification-artist"></p>
             </div>
         </div>
     </div>
