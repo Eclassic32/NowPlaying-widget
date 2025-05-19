@@ -1,0 +1,598 @@
+/* 
+ * Windows Media Controller Web Widget Styles
+ * 
+ * HOW TO CUSTOMIZE APP NAMES AND STYLES:
+ * --------------------------------------
+ * 1. App names are controlled entirely by CSS using data-app attributes
+ * 2. Find the "App Name Display Settings" section below to customize how apps are displayed
+ * 3. Use the provided templates to add your own custom styles for different apps
+ * 4. No code changes required - just edit this CSS file!
+ */
+
+/* Base styles */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    background-color: #f5f5f5;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: #333;
+}
+
+/* Currently Playing Widget Styles */
+.media-widget {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 600px;
+    padding: 20px;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Hide widget when no media is playing */
+.media-widget.no-media {
+    opacity: 0.5;
+    transform: scale(0.95);
+    filter: grayscale(1);
+}
+
+.widget-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.widget-header h1 {
+    font-size: 24px;
+    margin: 0;
+    color: #444;
+}
+
+.app-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+#app-name {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+#status {
+    font-size: 14px;
+    color: #666;
+    margin-top: 4px;
+}
+
+.media-content {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.media-info {
+    flex: 1;
+    padding-right: 20px;
+}
+
+.media-title {
+    font-size: 24px;
+    margin: 0 0 10px 0;
+    color: #333;
+}
+
+.media-artist, .media-album {
+    margin: 5px 0;
+    color: #666;
+}
+
+.media-artist {
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.media-album {
+    font-size: 16px;
+    font-style: italic;
+}
+
+.additional-artists-container {
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px dashed #eee;
+}
+
+.additional-artists-container h3 {
+    font-size: 14px;
+    margin: 0 0 5px 0;
+    color: #888;
+}
+
+#additional-artists {
+    font-size: 14px;
+    margin: 0;
+    color: #666;
+}
+
+.media-thumbnail-container {
+    width: 120px;
+    height: 120px;
+    flex-shrink: 0;
+}
+
+.media-thumbnail {
+    width: 100%;
+    height: 100%;
+    background-color: #eee;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+/* Loading indicator for album art */
+.media-thumbnail.loading::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.2);
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.2; }
+    50% { opacity: 0.5; }
+    100% { opacity: 0.2; }
+}
+
+.album-art {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+    transition: opacity 0.3s ease;
+}
+
+/* Spotify-specific album art styling */
+[data-app-name*="Spotify"] .album-art {
+    /* No additional styling needed - we crop the image at the server */
+    border: 2px solid #1db954;
+}
+
+.no-art {
+    font-size: 48px;
+    color: #999;
+}
+
+.media-timeline {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.time-display {
+    font-family: monospace;
+    font-size: 14px;
+    color: #666;
+}
+
+.progress-container {
+    flex: 1;
+    height: 6px;
+    background-color: #eee;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background-color: #4285f4;
+    transition: width 0.5s ease-in-out;
+}
+
+/* Playback status-specific styles */
+.media-widget.playing .progress-bar {
+    background-color: #4caf50;
+}
+
+.media-widget.paused .progress-bar {
+    background-color: #ff9800;
+}
+
+.media-widget.stopped .progress-bar {
+    background-color: #f44336;
+}
+
+/* App-specific styling examples */
+/* Spotify-like styling */
+[data-app-name*="Spotify"] {
+    background-color: #1db954;
+    color: white;
+}
+
+[data-app-name*="Spotify"] .media-title,
+[data-app-name*="Spotify"] .widget-header h1 {
+    color: white;
+}
+
+[data-app-name*="Spotify"] .media-artist,
+[data-app-name*="Spotify"] .media-album,
+[data-app-name*="Spotify"] #status,
+[data-app-name*="Spotify"] .time-display {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+[data-app-name*="Spotify"] .progress-container {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+[data-app-name*="Spotify"] .progress-bar {
+    background-color: white;
+}
+
+/* Browser-based apps styling */
+[data-app-name*="chrome.exe"], 
+[data-app-name*="edge.exe"],
+[data-app-name*="firefox.exe"],
+[data-app-name*="Browser"] {
+    background: linear-gradient(135deg, #4285f4, #34a853, #fbbc05, #ea4335);
+    color: white;
+}
+
+[data-app-name*="chrome.exe"] .media-title,
+[data-app-name*="edge.exe"] .media-title,
+[data-app-name*="firefox.exe"] .media-title,
+[data-app-name*="Browser"] .media-title,
+[data-app-name*="chrome.exe"] .widget-header h1,
+[data-app-name*="edge.exe"] .widget-header h1,
+[data-app-name*="firefox.exe"] .widget-header h1,
+[data-app-name*="Browser"] .widget-header h1 {
+    color: white;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+[data-app-name*="chrome.exe"] .media-artist,
+[data-app-name*="edge.exe"] .media-artist,
+[data-app-name*="firefox.exe"] .media-artist,
+[data-app-name*="Browser"] .media-artist,
+[data-app-name*="chrome.exe"] .media-album,
+[data-app-name*="edge.exe"] .media-album,
+[data-app-name*="firefox.exe"] .media-album,
+[data-app-name*="Browser"] .media-album,
+[data-app-name*="chrome.exe"] #status,
+[data-app-name*="edge.exe"] #status,
+[data-app-name*="firefox.exe"] #status,
+[data-app-name*="Browser"] #status,
+[data-app-name*="chrome.exe"] .time-display,
+[data-app-name*="edge.exe"] .time-display,
+[data-app-name*="firefox.exe"] .time-display,
+[data-app-name*="Browser"] .time-display {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+[data-app-name*="chrome.exe"] .progress-container,
+[data-app-name*="edge.exe"] .progress-container,
+[data-app-name*="firefox.exe"] .progress-container,
+[data-app-name*="Browser"] .progress-container {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+[data-app-name*="chrome.exe"] .progress-bar,
+[data-app-name*="edge.exe"] .progress-bar,
+[data-app-name*="firefox.exe"] .progress-bar,
+[data-app-name*="Browser"] .progress-bar {
+    background-color: white;
+}
+
+/* YouTube-like styling */
+[data-app-name*="chrome.exe"], 
+[data-app-name*="edge.exe"], 
+[data-app-name*="YouTube"] {
+    background-color: #ff0000;
+    color: white;
+}
+
+[data-app-name*="chrome.exe"] .media-title,
+[data-app-name*="edge.exe"] .media-title,
+[data-app-name*="YouTube"] .media-title,
+[data-app-name*="chrome.exe"] .widget-header h1,
+[data-app-name*="edge.exe"] .widget-header h1,
+[data-app-name*="YouTube"] .widget-header h1 {
+    color: white;
+}
+
+[data-app-name*="chrome.exe"] .media-artist,
+[data-app-name*="edge.exe"] .media-artist,
+[data-app-name*="YouTube"] .media-artist,
+[data-app-name*="chrome.exe"] .media-album,
+[data-app-name*="edge.exe"] .media-album,
+[data-app-name*="YouTube"] .media-album,
+[data-app-name*="chrome.exe"] #status,
+[data-app-name*="edge.exe"] #status,
+[data-app-name*="YouTube"] #status,
+[data-app-name*="chrome.exe"] .time-display,
+[data-app-name*="edge.exe"] .time-display,
+[data-app-name*="YouTube"] .time-display {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+[data-app-name*="chrome.exe"] .progress-container,
+[data-app-name*="edge.exe"] .progress-container,
+[data-app-name*="YouTube"] .progress-container {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+[data-app-name*="chrome.exe"] .progress-bar,
+[data-app-name*="edge.exe"] .progress-bar,
+[data-app-name*="YouTube"] .progress-bar {
+    background-color: white;
+}
+
+/* Windows Media Player-like styling */
+[data-app-name*="Windows.Media"] {
+    background: linear-gradient(135deg, #0078d7, #002050);
+    color: white;
+}
+
+[data-app-name*="Windows.Media"] .media-title,
+[data-app-name*="Windows.Media"] .widget-header h1 {
+    color: white;
+}
+
+[data-app-name*="Windows.Media"] .media-artist,
+[data-app-name*="Windows.Media"] .media-album,
+[data-app-name*="Windows.Media"] #status,
+[data-app-name*="Windows.Media"] .time-display {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+[data-app-name*="Windows.Media"] .progress-container {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+[data-app-name*="Windows.Media"] .progress-bar {
+    background-color: white;
+}
+
+/* Now Playing Notification Styles */
+.notification-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 300px;
+    pointer-events: none;
+}
+
+.notification {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    padding: 15px;
+    margin-bottom: 10px;
+    opacity: 0;
+    transform: translateX(50px);
+    transition: all 0.5s ease-in-out;
+    overflow: hidden;
+}
+
+.notification.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.notification-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.notification-app {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.notification-status {
+    font-size: 12px;
+    color: #666;
+}
+
+.notification-title {
+    font-size: 18px;
+    margin: 0 0 5px 0;
+}
+
+.notification-artist {
+    font-size: 14px;
+    margin: 0;
+    color: #666;
+}
+
+/* App-specific notification styling */
+[data-app-name*="Spotify"].notification {
+    background-color: #1db954;
+    color: white;
+}
+
+[data-app-name*="Spotify"].notification .notification-title {
+    color: white;
+}
+
+[data-app-name*="Spotify"].notification .notification-artist,
+[data-app-name*="Spotify"].notification .notification-status {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+[data-app-name*="chrome.exe"].notification,
+[data-app-name*="edge.exe"].notification,
+[data-app-name*="YouTube"].notification {
+    background-color: #ff0000;
+    color: white;
+}
+
+[data-app-name*="chrome.exe"].notification .notification-title,
+[data-app-name*="edge.exe"].notification .notification-title,
+[data-app-name*="YouTube"].notification .notification-title {
+    color: white;
+}
+
+[data-app-name*="chrome.exe"].notification .notification-artist,
+[data-app-name*="edge.exe"].notification .notification-artist,
+[data-app-name*="YouTube"].notification .notification-artist,
+[data-app-name*="chrome.exe"].notification .notification-status,
+[data-app-name*="edge.exe"].notification .notification-status,
+[data-app-name*="YouTube"].notification .notification-status {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+[data-app-name*="Windows.Media"].notification {
+    background: linear-gradient(135deg, #0078d7, #002050);
+    color: white;
+}
+
+[data-app-name*="Windows.Media"].notification .notification-title {
+    color: white;
+}
+
+[data-app-name*="Windows.Media"].notification .notification-artist,
+[data-app-name*="Windows.Media"].notification .notification-status {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* VLC-like styling */
+[data-app-name*="vlc.exe"] {
+    background-color: #ff5722; /* Vibrant Orange color, similar to VLC's branding */
+    color: white;
+}
+
+[data-app-name*="vlc.exe"] .media-title,
+[data-app-name*="vlc.exe"] .widget-header h1 {
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+[data-app-name*="vlc.exe"] .media-artist,
+[data-app-name*="vlc.exe"] .media-album,
+[data-app-name*="vlc.exe"] #status,
+[data-app-name*="vlc.exe"] .time-display {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+[data-app-name*="vlc.exe"] .progress-container {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+[data-app-name*="vlc.exe"] .progress-bar {
+    background-color: #ffccbc; /* Lighter shade of orange for the progress bar */
+}
+
+/* Additional styling for VLC (optional) */
+[data-app-name*="vlc.exe"] .widget-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+[data-app-name*="vlc.exe"] .media-thumbnail {
+    border: 2px solid #ffccbc;
+}
+
+[data-app-name*="vlc.exe"] .media-thumbnail.loading::after {
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+[data-app-name*="vlc.exe"] .media-content {
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    padding-top: 15px;
+}
+
+/* VLC-specific notification styling */
+[data-app-name*="vlc.exe"].notification {
+    background-color: #ff5722;
+    color: white;
+}
+
+[data-app-name*="vlc.exe"].notification .notification-title {
+    color: white;
+}
+
+[data-app-name*="vlc.exe"].notification .notification-artist,
+[data-app-name*="vlc.exe"].notification .notification-status {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* App Name Display Settings
+   This section determines how app names are displayed in the UI.
+   For each app, you can:
+   1. Define the visual styling (colors, fonts, etc)
+   2. Target elements by the raw app name coming from Windows
+   
+   How to use:
+   - Each app uses [data-app-name*="string"] selectors
+   - Match partial strings from the Windows app identifier
+   - Examples below show how to style different media players
+*/
+
+/* App Name Display Settings - Customizable by users */
+.app-name-display[data-app="chrome.exe"]::before { content: "Chrome"; }
+.app-name-display[data-app="firefox.exe"]::before { content: "Firefox"; }
+.app-name-display[data-app="msedge.exe"]::before { content: "Edge"; }
+.app-name-display[data-app*="Edge"]::before { content: "Edge"; }
+.app-name-display[data-app*="Internet.Explorer"]::before { content: "Internet Explorer"; }
+.app-name-display[data-app*="ApplicationFrameHost"]::before { content: "Microsoft Store App"; }
+.app-name-display[data-app*="Spotify"]::before { content: "Spotify"; }
+.app-name-display[data-app="spotify.exe"]::before { content: "Spotify"; }
+.app-name-display[data-app="vlc.exe"]::before { content: "VLC Media Player"; }
+.app-name-display[data-app*="Netflix"]::before { content: "Netflix"; }
+.app-name-display[data-app*="YouTube"]::before { content: "YouTube"; }
+.app-name-display[data-app*="Movies"]::before { content: "Movies & TV"; }
+.app-name-display[data-app*="Groove"]::before { content: "Groove Music"; }
+
+/* Example template for any .exe app */
+.app-name-display[data-app*="example.exe"]::before { 
+    content: "Example Player"; 
+}
+
+[data-app-name*="example.exe"] {
+    background: linear-gradient(135deg, #8844ee, #4455dd);
+    color: white;
+}
+
+[data-app-name*="example.exe"] .media-title,
+[data-app-name*="example.exe"] .widget-header h1 {
+    color: white;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+[data-app-name*="example.exe"] .media-artist,
+[data-app-name*="example.exe"] .media-album,
+[data-app-name*="example.exe"] #status,
+[data-app-name*="example.exe"] .time-display {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+[data-app-name*="example.exe"] .progress-container {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+[data-app-name*="example.exe"] .progress-bar {
+    background-color: #ffcc00;
+}
+
+[data-app-name*="example.exe"] .media-thumbnail {
+    border: 2px solid #ffcc00;
+    box-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
+}
