@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Now Playing Notification</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script>
+        // Polling interval in milliseconds
+        const POLLING_INTERVAL = 1000;
+        
+        // How long to show the notification before hiding it (in milliseconds)
+        const NOTIFICATION_DURATION = 5000;
+        
+        // Keep track of the last seen media ID to detect changes
+        let lastSeenId = 0;
+        
+        // Function to show the notification
+        function showNotification(mediaInfo) {
+            if (!mediaInfo) return;
+            
+            const notification = document.getElementById('notification');
+            
+            // Update the data-app-name attribute
+            notification.setAttribute('data-app-name', mediaInfo.app_name || 'Unknown');
+            
+            // Update text content
+            document.getElementById('notification-title').textContent = mediaInfo.title || 'Not Playing';
+            document.getElementById('notification-artist').textContent = mediaInfo.artist || 'Unknown Artist';
+            
+            // Set the app name display with CSS support
+            const appNameElement = document.getElementById('notification-app');
+            appNameElement.setAttribute('data-app', mediaInfo.app_name || '');
+            
+            document.getElementById('notification-status').textContent = mediaInfo.status || 'UNKNOWN';
+            
+            // Show the notification with animation
+            notification.classList.add('show');
+            
+            // Hide the notification after a delay
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, NOTIFICATION_DURATION);
+        }
+        
+        // Function to fetch media changes from the API
+        async function fetchMediaChanges() {
+            try {
+                const response = await fetch(`/api/media_changes?last_id=${lastSeenId}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const changes = await response.json();
+                
+                // Process any new changes
+                if (changes && changes.length > 0) {
+                    // Sort by ID to ensure we process them in order
+                    changes.sort((a, b) => a.id - b.id);
+                    
+                    // Get the most recent change
+                    const latestChange = changes[changes.length - 1];
+                    
+                    // Update the last seen ID
+                    lastSeenId = latestChange.id;
+                    
+                    // Show notification for the most recent change
+                    showNotification(latestChange.info);
+                }
+            } catch (error) {
+                console.error('Error fetching media changes:', error);
+            }
+        }
+        
+        // When the document is loaded, start polling for updates
+        document.addEventListener('DOMContentLoaded', () => {
+            // Fetch immediately on load
+            fetchMediaChanges();
+            
+            // Then set up polling interval
+            setInterval(fetchMediaChanges, POLLING_INTERVAL);
+        });
+    </script>
+</head>
+<body>
+    <div class="notification-container">
+        <div id="notification" class="notification" data-app-name="Unknown">
+            <div class="notification-header">
+                <span id="notification-app" class="notification-app app-name-display" data-app="">Unknown App</span>
+                <span id="notification-status" class="notification-status">UNKNOWN</span>
+            </div>
+            <div class="notification-content">
+                <h2 id="notification-title" class="notification-title">Not Playing</h2>
+                <p id="notification-artist" class="notification-artist">Unknown Artist</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

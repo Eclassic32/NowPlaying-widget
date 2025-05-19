@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currently Playing</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script>
+        // Polling interval in milliseconds
+        const POLLING_INTERVAL = 1000;
+        let lastMediaInfo = null;
+        
+        // Function to format time in MM:SS format
+        function formatTime(seconds) {
+            if (!seconds || isNaN(seconds)) return "00:00";
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+               
+        // Function to update the UI with media info
+        function updateMediaInfo(mediaInfo) {
+            if (!mediaInfo) return;
+            
+            // Update the data-app-name attribute - use exact app name for CSS targeting
+            document.getElementById('media-widget').setAttribute('data-app-name', mediaInfo.app_name || 'Unknown');
+            
+            // Update text content
+            document.getElementById('title').textContent = mediaInfo.title || 'Not Playing';
+            document.getElementById('artist').textContent = (isNotUnknown(mediaInfo.artist)) ? mediaInfo.artist : '';
+            document.getElementById('album').textContent = (isNotUnknown(mediaInfo.album_title)) ? mediaInfo.album_title : '';
+            
+            // Update app name display for CSS-based friendly names
+            const appNameElement = document.getElementById('app-name');
+            appNameElement.setAttribute('data-app', mediaInfo.app_name || '');
+            if (appNameElement.classList.contains('app-name-display')) {
+                // Let CSS ::before handle the content
+                appNameElement.textContent = ''; 
+            } else {
+                appNameElement.textContent = (isNotUnknown(mediaInfo.app_name)) ? mediaInfo.app_name : '';
+            }
+            
+            document.getElementById('status').textContent = (isNotUnknown(mediaInfo.status)) ? mediaInfo.status : 'UNKNOWN';
+            
+            // Update time information
+            document.getElementById('current-time').textContent = formatTime(mediaInfo.current_time_seconds);
+            document.getElementById('duration').textContent = formatTime(mediaInfo.duration_seconds);
+            
+            // Update progress bar
+            const progressBar = document.getElementById('progress-bar');
+            if (mediaInfo.duration_seconds > 0) {
+                const progress = (mediaInfo.current_time_seconds / mediaInfo.duration_seconds) * 100;
+                progressBar.style.width = `${progress}%`;
+            } else {
+                progressBar.style.width = '0%';
+            }
+            
+            // Update additional artists if available
+            const additionalArtistsElement = document.getElementById('additional-artists');
+            if (mediaInfo.additional_artists && mediaInfo.additional_artists.length > 0) {
+                additionalArtistsElement.textContent = mediaInfo.additional_artists.join(', ');
+                document.getElementById('additional-artists-container').style.display = 'block';
+            } else {
+                document.getElementById('additional-artists-container').style.display = 'none';
+            }
+            
+            // Update album art if available
+            const albumArtContainer = document.querySelector('.media-thumbnail');
+            const noArtElement = document.querySelector('.no-art');
+            let albumArtImage = document.getElementById('album-art-image');
+            
+            // Add data attribute for app name to help with styling/debugging
+            albumArtContainer.setAttribute('data-app', mediaInfo.app_name || '');
+            
+            // Clear both elements first to avoid overlap
+            if (noArtElement) {
+                noArtElement.style.display = 'none';
+            }
+            
+            if (albumArtImage) {
+                albumArtImage.style.display = 'none';
+            }
+            
+            if (mediaInfo.has_thumbnail) {
+                // Create or update image element for album art
+                if (!albumArtImage) {
+                    const img = document.createElement('img');
+                    img.id = 'album-art-image';
+                    img.className = 'album-art';
+                    img.alt = 'Album Art';
+                    
+                    // Add error handling to detect/report thumbnail failures
+                    img.onerror = () => {
+                        console.error(`Failed to load album art for ${mediaInfo.app_name} - ${mediaInfo.title}`);
+                        img.style.display = 'none';
+                        if (noArtElement) {
+                            noArtElement.style.display = 'block';
+                        }
+                    };
+                    
+                    albumArtContainer.appendChild(img);
+                }
+                
+                // Only update the image when the song changes to avoid flickering
+                const isNewSong = !lastMediaInfo || 
+                                lastMediaInfo.title !== mediaInfo.title || 
+                                lastMediaInfo.artist !== mediaInfo.artist ||
+                                lastMediaInfo.app_name !== mediaInfo.app_name;
+                
+                // Add fallback for Spotify reconnections - if app_name contains spotify but the status changed
+                const isSpotifyReconnect = mediaInfo.app_name && 
+                                        mediaInfo.app_name.toLowerCase().includes('spotify') && 
+                                        lastMediaInfo && 
+                                        lastMediaInfo.status !== mediaInfo.status;              
+                
+                if (isNewSong || isSpotifyReconnect) {       
+                    console.log(`New song detected: ${mediaInfo.title} by ${mediaInfo.artist} on ${mediaInfo.app_name}`);
+                    
+                    const cacheParam = new Date().getTime();
+                    albumArtImage = document.getElementById('album-art-image'); // Re-fetch in case it was just created
+                    if (albumArtImage) {
+                        albumArtImage.src = `/api/album_art?t=${cacheParam}&app=${encodeURIComponent(mediaInfo.app_name || '')}`;
+                        albumArtImage.style.display = 'block';
+                        
+                        // Show loading state briefly
+                        albumArtContainer.classList.add('loading');
+                        setTimeout(() => {
+                            albumArtContainer.classList.remove('loading');
+                        }, 300);
+                    }
+                } else if (albumArtImage) {
+                    // Make sure it's visible even if not a new song
+                    albumArtImage.style.display = 'block';
+                }
+                
+                // Save current song info for next comparison
+                lastMediaInfo = {
+                    title: mediaInfo.title,
+                    artist: mediaInfo.artist,
+                    album: mediaInfo.album_title,
+                    app_name: mediaInfo.app_name,
+                    status: mediaInfo.status
+                };
+            } else {
+                // If no album art, show the placeholder
+                if (noArtElement) {
+                    noArtElement.style.display = 'block';
+                }
+                
+                // Clear last song info
+                lastMediaInfo = null;
+            }
+            
+            // Update the class based on playback status
+            const widgetElement = document.getElementById('media-widget');
+            widgetElement.classList.remove('playing', 'paused', 'stopped');
+            if (mediaInfo.status === 'PLAYING') {
+                widgetElement.classList.add('playing');
+            } else if (mediaInfo.status === 'PAUSED') {
+                widgetElement.classList.add('paused');
+            } else {
+                widgetElement.classList.add('stopped');
+            }
+        }
+        
+        function isNotUnknown(text){
+            text = text.toLowerCase();
+            switch (text) {
+                case 'unknown': case 'unknown app':
+                case 'unknown artist':
+                case 'unknown album':
+                case 'unknown title':
+                case 'unknown song':
+                case '':
+                    return false;
+                    break;
+                default:
+                    return true;
+            }
+        }
+
+        // Function to fetch media info from the API
+        async function fetchMediaInfo() {
+            try {
+                const response = await fetch('/api/current_media');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                
+                // Get the widget element
+                const widgetElement = document.getElementById('media-widget');
+                
+                // If we got an error message or empty media data, hide the widget
+                if (data.error || !data.title || data.status === 'CLOSED' || data.status === 'STOPPED' || data.status === 'OPENED') {
+                    widgetElement.classList.add('no-media');
+                    console.log('No active media playing, hiding widget');
+                    
+                    // Clear media info fields
+                    document.getElementById('title').textContent = 'Not Playing';
+                    document.getElementById('artist').textContent = '';
+                    document.getElementById('album').textContent = '';
+                    document.getElementById('app-name').textContent = '';
+                    document.getElementById('status').textContent = '';
+                    document.getElementById('current-time').textContent = '00:00';
+                    document.getElementById('progress-bar').style.width = '0%';
+                    document.getElementById('duration').textContent = '00:00';
+                    widgetElement.setAttribute('data-app-name', '');
+                    
+                    // Clear thumbnail
+                    const albumArtImage = document.getElementById('album-art-image');
+                    if (albumArtImage) {
+                        albumArtImage.style.display = 'none';
+                    }
+                    
+                    // Show no-art placeholder
+                    const noArtElement = document.querySelector('.no-art');
+                    if (noArtElement) {
+                        noArtElement.style.display = 'block';
+                    }
+                    
+                    return;
+                }
+                
+                // Show the widget if it was hidden
+                widgetElement.classList.remove('no-media');
+                
+                // Update the UI with media info
+                updateMediaInfo(data);
+            } catch (error) {
+                console.error('Error fetching media info:', error);
+            }
+        }
+        
+        // When the document is loaded, start polling for updates
+        document.addEventListener('DOMContentLoaded', () => {
+            // Fetch immediately on load
+            fetchMediaInfo();
+            
+            // Then set up polling interval
+            setInterval(fetchMediaInfo, POLLING_INTERVAL);
+        });
+    </script>
+</head>
+<body>
+    <div id="media-widget" class="media-widget" data-app-name="Unknown">
+        <div class="widget-header">
+            <h1>Currently Playing</h1>
+            <div class="app-info">
+                <span id="app-name" class="app-name-display" data-app="">Unknown App</span>
+                <span id="status">UNKNOWN</span>
+            </div>
+        </div>
+        
+        <div class="media-content">
+            <div class="media-info">
+                <h2 id="title" class="media-title">Not Playing</h2>
+                <p id="artist" class="media-artist">Unknown Artist</p>
+                <p id="album" class="media-album">Unknown Album</p>
+                
+                <div id="additional-artists-container" class="additional-artists-container" style="display: none;">
+                    <h3>Additional Artists:</h3>
+                    <p id="additional-artists"></p>
+                </div>
+            </div>
+            
+            <div class="media-thumbnail-container">
+                <!-- Placeholder for album art if implemented -->
+                <div class="media-thumbnail">
+                    <div class="no-art">🎵</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="media-timeline">
+            <span id="current-time" class="time-display">00:00</span>
+            <div class="progress-container">
+                <div id="progress-bar" class="progress-bar"></div>
+            </div>
+            <span id="duration" class="time-display">00:00</span>
+        </div>
+    </div>
+</body>
+</html>
