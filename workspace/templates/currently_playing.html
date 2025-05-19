@@ -4,15 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Currently Playing</title>
-    <!-- Style with regular CSS -->
-    <!-- <link rel="stylesheet" href="/static/style.css"> --> 
 
-    <!-- Use SASS for dynamic styling -->
     <style id="compiled-css"></style>
     <script src="/static/sass.js"></script>
     <script>
         // Function to fetch the Sass file
-        function fetchSassFile(url) {
+        function fetchServerFile(url) {
             return fetch(url)
                 .then(response => {
                     if (!response.ok) {
@@ -22,8 +19,22 @@
                 });
         }
 
+        fetchServerFile('static/style.scss')
+            .then(cssCode => {
+                if (cssCode) {
+                    // If compilation is successful, inject the CSS into the <style> tag
+                    document.getElementById('compiled-css').innerHTML = cssCode;
+                } else {
+                    console.info('Error fetching CSS file, switching to SCSS');
+                }
+                
+            })
+            .catch(error => {
+                console.info('Error fetching CSS file, switching to SCSS');
+            });
+
         // Compile Sass
-        fetchSassFile('static/style.scss')
+        fetchServerFile('static/style.scss')
             .then(sassCode => {
                 const sass = new Sass();
                 sass.compile(sassCode, function(result) {

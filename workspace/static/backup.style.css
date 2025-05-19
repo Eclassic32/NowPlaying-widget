@@ -1,4 +1,10 @@
 /* 
+ * This is meant to be backup CSS for the Windows Media Controller Web Widget.
+ * Use this only if the main SCSS file is not working for you.  
+ * Rename file to "style.css" for it to work.
+*/
+
+/* 
  * Windows Media Controller Web Widget Styles
  * 
  * HOW TO CUSTOMIZE APP NAMES AND STYLES:
