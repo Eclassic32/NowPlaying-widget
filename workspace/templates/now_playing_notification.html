@@ -19,7 +19,7 @@
                 });
         }
 
-        fetchServerFile('static/style.scss')
+        fetchServerFile('static/style.css')
             .then(cssCode => {
                 if (cssCode) {
                     // If compilation is successful, inject the CSS into the <style> tag
@@ -34,7 +34,7 @@
             });
 
         // Compile Sass
-        fetchSassFile('static/style.scss')
+        fetchServerFile('static/style.scss')
             .then(sassCode => {
                 const sass = new Sass();
                 sass.compile(sassCode, function(result) {

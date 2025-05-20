@@ -214,7 +214,8 @@ body {
 /* App-specific styling examples */
 /* Spotify-like styling */
 
-[data-app="spotify.exe"],
+[data-app-name="spotify.exe"],
+[data-app-name="Spotify.exe"],
 [data-app-name*="Spotify"] {
     background-color: #1db954;
     color: white;
@@ -245,7 +246,7 @@ body {
         background-color: #1db954;
         color: white;
 
-        .notification-title {
+        .notification-title, .notification-status, .notification-artist {
             color: white;
         }
     
@@ -365,6 +366,115 @@ body {
     }
 }
 
+/* VLC styling */
+/* VLC doesn't have Windows 10 SMTC integration. Use something like 
+ * https://github.com/spmn/vlc-win10smtc with VLC to enable it. */
+[data-app-name*="vlc.exe"] {
+    background-color: #ff5722; 
+    color: white;
+    
+    & .app-name-display::before { content: "VLC Media Player"; }
+
+    .media-title, .widget-header h1 {
+        color: white;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    }
+    
+    .media-artist, .media-album, #status, .time-display {
+        color: rgba(255, 255, 255, 0.9);
+    }
+    
+    .progress-container {
+        background-color: rgba(255, 255, 255, 0.3);
+    }
+    
+    .progress-bar {
+        background-color: #ffccbc; 
+    }
+    
+    .widget-header {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .media-thumbnail {
+        border: 2px solid #ffccbc;
+    }
+    
+    .media-thumbnail.loading::after {
+        background-color: rgba(0, 0, 0, 0.3);
+    }
+    
+    .media-content {
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+        padding-top: 15px;
+    }
+    
+    &#notification {
+        background-color: #ff5722;
+        color: white;
+
+        .notification-title {
+            color: white;
+        }
+        
+        #notification-artist, #notification-status {
+            color: rgba(255, 255, 255, 0.8);
+        }
+    }
+}
+
+
+/* App Name Display Settings
+   This section determines how app names are displayed in the UI.
+   For each app, you can:
+   1. Define the visual styling (colors, fonts, etc)
+   2. Target elements by the raw app name coming from Windows
+   
+   How to use:
+   - Each app uses [data-app-name*="string"] selectors
+   - Match partial strings from the Windows app identifier
+   - Examples below show how to style different media players
+*/
+
+/* App Name Display Settings - Customizable by users */
+.app-name-display[data-app*="ApplicationFrameHost"]::before { content: "Microsoft Store App"; }
+.app-name-display[data-app*="Netflix"]::before { content: "Netflix"; }
+.app-name-display[data-app*="Movies"]::before { content: "Movies & TV"; }
+.app-name-display[data-app*="Groove"]::before { content: "Groove Music"; }
+
+/* Example template for any .exe app */
+
+[data-app-name*="example.exe"] {
+    background: linear-gradient(135deg, #8844ee, #4455dd);
+    color: white;
+
+    &.app-name-display::before { content: "Example Player"; }
+
+    .media-title, .widget-header h1 {
+        color: white;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    }
+    
+    .media-artist, .media-album, #status, .time-display {
+        color: rgba(255, 255, 255, 0.9);
+    }
+    
+    .progress-container {
+        background-color: rgba(255, 255, 255, 0.3);
+    }
+    
+    .progress-bar {
+        background-color: #ffcc00;
+    }
+    
+    .media-thumbnail {
+        border: 2px solid #ffcc00;
+        box-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
+    }
+}
+
+
+
 /* Now Playing Notification Styles */
 .notification-container {
     position: fixed;
@@ -418,112 +528,3 @@ body {
         }
     }
 }
-
-/* VLC styling */
-// VLC doesn't have Windows 10 SMTC integration. Use something like 
-// https://github.com/spmn/vlc-win10smtc with VLC to enable it.
-[data-app-name*="vlc.exe"] {
-    background-color: #ff5722; 
-    color: white;
-
-    .app-name-display::before { content: "VLC Media Player"; }
-
-    .media-title, .widget-header h1 {
-        color: white;
-        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-    }
-    
-    .media-artist, .media-album, #status, .time-display {
-        color: rgba(255, 255, 255, 0.9);
-    }
-    
-    .progress-container {
-        background-color: rgba(255, 255, 255, 0.3);
-    }
-    
-    .progress-bar {
-        background-color: #ffccbc; 
-    }
-    
-    .widget-header {
-        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-    }
-    
-    .media-thumbnail {
-        border: 2px solid #ffccbc;
-    }
-    
-    .media-thumbnail.loading::after {
-        background-color: rgba(0, 0, 0, 0.3);
-    }
-    
-    .media-content {
-        border-top: 1px solid rgba(255, 255, 255, 0.2);
-        padding-top: 15px;
-    }
-    
-    &.notification {
-        background-color: #ff5722;
-        color: white;
-
-        .notification-title {
-            color: white;
-        }
-        
-        #notification-artist, #notification-status {
-            color: rgba(255, 255, 255, 0.8);
-        }
-    }
-}
-
-
-/* App Name Display Settings
-   This section determines how app names are displayed in the UI.
-   For each app, you can:
-   1. Define the visual styling (colors, fonts, etc)
-   2. Target elements by the raw app name coming from Windows
-   
-   How to use:
-   - Each app uses [data-app-name*="string"] selectors
-   - Match partial strings from the Windows app identifier
-   - Examples below show how to style different media players
-*/
-
-/* App Name Display Settings - Customizable by users */
-.app-name-display[data-app*="ApplicationFrameHost"]::before { content: "Microsoft Store App"; }
-.app-name-display[data-app*="Netflix"]::before { content: "Netflix"; }
-.app-name-display[data-app*="Movies"]::before { content: "Movies & TV"; }
-.app-name-display[data-app*="Groove"]::before { content: "Groove Music"; }
-
-/* Example template for any .exe app */
-
-
-[data-app-name*="example.exe"] {
-    background: linear-gradient(135deg, #8844ee, #4455dd);
-    color: white;
-
-    &.app-name-display::before { content: "Example Player"; }
-
-    .media-title, .widget-header h1 {
-        color: white;
-        text-shadow: 0 1px 2px rgba(0,0,0,0.2);
-    }
-    
-    .media-artist, .media-album, #status, .time-display {
-        color: rgba(255, 255, 255, 0.9);
-    }
-    
-    .progress-container {
-        background-color: rgba(255, 255, 255, 0.3);
-    }
-    
-    .progress-bar {
-        background-color: #ffcc00;
-    }
-    
-    .media-thumbnail {
-        border: 2px solid #ffcc00;
-        box-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
-    }
-}
-
