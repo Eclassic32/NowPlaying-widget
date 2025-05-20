@@ -34,15 +34,13 @@ A web-based widget that displays information about currently playing media on Wi
 
 ## Usage
 1. Download/Clone this repo:
-2. Run the `run_app.py` at least once (it installs dependencies):
-```
-python run_app.py
-```
+2. Run the `python WinMWidget_run.py` at least once (it installs dependencies).
+> If you need this script somewhere else besides OBS you can stop here.
 3. Add these sourses to OBS
 - `http://localhost:5000/currentlyplaying` - For the full media display (Best at 600x300)
 - `http://localhost:5000/nowplaying` - For the notification-style display (Best at 350x300)
 4. Go to OBS > Tools > Scripts > Python Settings > Browse > Select your Python path.
-5. Go to OBS > Tools > Scripts > **+** (Add) > `obs_autostart_webserver.py`.
+5. Go to OBS > Tools > Scripts > **+** (Add) > `WinMWidget_obsautostart.py`.
 
 ## Customization
 
@@ -68,7 +66,18 @@ You can customize the appearance of the widget by modifying the `workspace/stati
 
 ## TODO
 
+- [x] Make it so OBS can start script when needed.
+- [ ] Add OBS script properties
+- [ ] Make better subprocessing.
 - [ ] Add more custom CSS for apps.
+  - [x] Browsers (firefox.exe, chrome.exe, etc.)
+  - [x] Spotify (spotify.exe)
+  - [ ] Apple Music
+  - [ ] Winamp
+  - [ ] Pandora? \[Seems like I can't access it\]
+  - [ ] Soundcloud \[Needs tab/domain information\]
+  - [x] VLC Media Player (vlc.exe)
+  - [x] Windows Media Player (Windows.Media)
+  - [ ] Youtube \[Needs tab/domain information\]
 - [ ] Figure out how to access tab/domain information in browser.
-- [ ] Make it so OBS can start script when needed.
 - [ ] Make actual player from this thing?
