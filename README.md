@@ -12,9 +12,6 @@ A web-based widget that displays information about currently playing media on Wi
 - Customizable styling based on the media application (different styles for Spotify, VLC, Firefox, etc.)
 
 ## Screenshots
-## Screenshots
-
-### Media Applications Display
 
 | Application | Currently Playing View | Now Playing View *(Notification style)* |
 |-------------|------------------------|-----------------|
