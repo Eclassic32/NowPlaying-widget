@@ -16,15 +16,14 @@ A web-based widget that displays information about currently playing media on Wi
 
 ### Media Applications Display
 
-| Application | Currently Playing View | Now Playing View *Notification style with browser media* |
+| Application | Currently Playing View | Now Playing View *(Notification style)* |
 |-------------|------------------------|-----------------|
-| **Browser** | ![Browser Media](screenshots/current_browser.png) | ![Browser Media Notification](screenshots/now_browser.png) |
+| **Browsers** | ![Browser Media](screenshots/current_browser.png) | ![Browser Media Notification](screenshots/now_browser.png) |
 | **Spotify** | ![Spotify](screenshots/current_spotify.png) | ![Spotify Notification](screenshots/now_spotify.png) |
-| **VLC Player**[^1] | ![VLC Player](screenshots/current_vlc.png) | ![VLC Player Notification](screenshots/now_vlc.png) |
+| **VLC Media Player** | ![VLC Player](screenshots/current_vlc.png) | ![VLC Player Notification](screenshots/now_vlc.png) |
 
-[^1]: VLC doesn't have Windows 10 SMTC integration. Use something like https://github.com/spmn/vlc-win10smtc with VLC to enable it.
-
-  *Note: vlc-win10smtc seemingly takes up to 20s to load media information.*
+⚠ VLC Media Player doesn't have Windows 10 SMTC integration. Use something like https://github.com/spmn/vlc-win10smtc with VLC to enable it.
+> *Note: vlc-win10smtc seemingly takes up to 20s to load media information.*
 
 ## Requirements
 
