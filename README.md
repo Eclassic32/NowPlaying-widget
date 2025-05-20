@@ -74,10 +74,10 @@ You can customize the appearance of the widget by modifying the `workspace/stati
   - [x] Spotify (spotify.exe)
   - [ ] Apple Music
   - [ ] Winamp
-  - [ ] Pandora? \[Seems like I can't access it\]
-  - [ ] Soundcloud \[Needs tab/domain information\]
+  - [ ] Pandora? <sub>\[Seems like I can't access it\]</sub>
+  - [ ] Soundcloud <sub>\[Needs tab/domain information\]</sub>
   - [x] VLC Media Player (vlc.exe)
   - [x] Windows Media Player (Windows.Media)
-  - [ ] Youtube \[Needs tab/domain information\]
+  - [ ] Youtube <sub>[Half done, needs tab/domain information\]</sub>
 - [ ] Figure out how to access tab/domain information in browser.
 - [ ] Make actual player from this thing?
